@@ -29,11 +29,10 @@ sub false;
 
 # define accessors
 BEGIN {
-    for my $attr (qw/utf8 allow_nonref max_size/) {
+    for my $attr (qw/utf8 allow_nonref max_size inflate_boolean inflate_nan inflate_null inflate_infinity/) {
         my $attr_accessor = sub {
             my $self = shift;
-            my $value = @_ ? shift : 1;
-            $self->{parser}->$attr($value);
+            $self->{parser}->$attr(@_);
             return $self;
         };
         my $attr_getter = sub {

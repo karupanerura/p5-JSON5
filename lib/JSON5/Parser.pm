@@ -12,7 +12,6 @@ our $POINTER;
 
 sub new {
     my $class = shift;
-    my $args  = (@_ == 1 and ref $_[0] eq 'HASH') ? +shift : +{ @_ };
     return bless +{
         utf8             => 0,
         allow_nonref     => 0,
@@ -21,16 +20,33 @@ sub new {
         inflate_nan      => sub { 0+'NaN' },
         inflate_null     => sub { undef },
         inflate_infinity => sub { $_[0] eq '+' ? 0+'Inf' : 0+'-Inf' },
-        %$args,
     } => $class;
 }
 
 # define accessors
 BEGIN {
-    for my $attr (qw/utf8 allow_nonref max_size/) {
+    # boolean accessors
+    for my $attr (qw/utf8 allow_nonref/) {
         my $attr_accessor = sub {
             my $self = shift;
             $self->{$attr} = @_ ? shift : 1;
+            return $self;
+        };
+        my $attr_getter = sub {
+            my $self = shift;
+            return $self->{$attr};
+        };
+
+        no strict qw/refs/;
+        *{"$attr"}     = $attr_accessor;
+        *{"get_$attr"} = $attr_getter;
+    }
+
+    # value accessors
+    for my $attr (qw/max_size inflate_boolean inflate_nan inflate_null inflate_infinity/) {
+        my $attr_accessor = sub {
+            my $self = shift;
+            $self->{$attr} = shift if @_;
             return $self;
         };
         my $attr_getter = sub {
