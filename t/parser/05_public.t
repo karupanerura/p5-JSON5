@@ -16,10 +16,11 @@ filters {
     expected => [qw/json/],
 };
 
-my $parser = JSON5::Parser->new(
-    inflate_nan      => sub { "<<<SPECIAL VALUE:NaN>>>" },
-    inflate_infinity => sub { "<<<SPECIAL VALUE:$_[0]Infinity>>>" },
-)->allow_nonref->utf8;
+my $parser = JSON5::Parser->new
+    ->inflate_nan(sub { "<<<SPECIAL VALUE:NaN>>>" })
+    ->inflate_infinity(sub { "<<<SPECIAL VALUE:$_[0]Infinity>>>" })
+    ->allow_nonref
+    ->utf8;
 for my $block (blocks) {
     my $parsed = eval { $parser->parse($block->input) };
     is_deeply $parsed, $block->expected, $block->get_section('name')
