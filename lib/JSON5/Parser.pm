@@ -67,9 +67,6 @@ sub parse {
     return $ROOT;
 }
 
-sub _get_value { ${$POINTER} }
-sub _set_value { ${$POINTER} = $_[1] }
-
 sub _parse {
     my $self = shift;
 
