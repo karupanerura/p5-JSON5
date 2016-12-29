@@ -29,7 +29,7 @@ sub false;
 
 # define accessors
 BEGIN {
-    for my $attr (qw/utf8 allow_nonref max_size inflate_boolean/) {
+    for my $attr (qw/utf8 allow_nonref max_size/) {
         my $attr_accessor = sub {
             my $self = shift;
             my $value = @_ ? shift : 1;
