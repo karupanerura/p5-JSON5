@@ -167,6 +167,10 @@ C<1> (C<JSON::PP::true>), C<false> becomes C<0> (C<JSON::PP::false>),
 C<NaN> becomes C<'NaN'>, C<Infinity> becomes C<'Inf'>, and
 C<null> becomes C<undef>.
 
+=head1 SEE ALSO
+
+L<JSON::PP>
+
 =head1 LICENSE
 
 Copyright (C) karupanerura.

@@ -129,6 +129,10 @@ Perl arrayrefs and JSON5 objects become Perl hashrefs. `true` becomes
 `NaN` becomes `'NaN'`, `Infinity` becomes `'Inf'`, and
 `null` becomes `undef`.
 
+# SEE ALSO
+
+[JSON::PP](https://metacpan.org/pod/JSON::PP)
+
 # LICENSE
 
 Copyright (C) karupanerura.
