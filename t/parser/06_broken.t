@@ -40,6 +40,16 @@ a
 [a]
 
 ===
+--- name: valid value in array but not closed
+--- input
+["valid value"
+
+===
+--- name: valid value and comma in array but not closed
+--- input
+["valid value",
+
+===
 --- name: not closed object
 --- input
 {
@@ -63,6 +73,12 @@ a
 --- name: not closed after valid value
 --- input
 {identifier:"valid value"
+
+
+===
+--- name: not closed after valid value and comma
+--- input
+{identifier:"valid value",
 
 ===
 --- name: complex nested broken object
