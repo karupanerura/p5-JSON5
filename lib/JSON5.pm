@@ -57,6 +57,8 @@ __END__
 
 =encoding utf-8
 
+=for stopwords utf8 mutators arrayrefs hashrefs
+
 =head1 NAME
 
 JSON5 - The JSON5 implementation for Perl 5
@@ -119,7 +121,7 @@ characters outside the range 0..255, they are thus useful for bytewise/binary I/
 (In Perl 5.005, any character outside the range 0..255 does not exist.
 See to L<UNICODE HANDLING ON PERLS>.)
 
-In future versions, enabling this option might enable autodetection of the UTF-16 and UTF-32
+In future versions, enabling this option might enable auto-detection of the UTF-16 and UTF-32
 encoding families, as described in RFC4627.
 
 If $enable is false, then the decode expects thus a Unicode string. Any decoding
