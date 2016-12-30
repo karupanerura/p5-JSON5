@@ -248,14 +248,9 @@ sub _parse_number {
         ${$POINTER} = $number;
         return 1;
     }
-    elsif (/\G([-+]?)([0-9]+)\.e([0-9]+)/mgc) {
-        my $number = $2 * 10 ** $3;
-        $number *= -1 if $1 && $1 eq '-';
-        ${$POINTER} = $number;
-        return 1;
-    }
-    elsif (/\G([-+]?(?:[0-9]+(?:\.[0-9]*)?|[0-9]*\.[0-9]+))/mgc) {
+    elsif (/\G([-+]?(?:[0-9]+(?:\.[0-9]*)?|[0-9]*\.[0-9]+))(?:e([-+]?[0-9]+))?/mgc) {
         my $number = 0+$1;
+        $number *= 10 ** $2 if defined $2;
         ${$POINTER} = $number;
         return 1;
     }
