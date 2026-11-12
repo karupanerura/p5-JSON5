@@ -142,91 +142,95 @@ sub _parse_object_or_array {
 sub _parse_object_kv {
     my $self = shift;
 
-    # skip
-    1 while $self->_skip_whitespace() || $self->_skip_comments();
+    while (1) {
+        # skip
+        1 while $self->_skip_whitespace() || $self->_skip_comments();
 
-    # is last?
-    if (/\G\}/mgc) {
-        return 1;
-    }
+        # is last?
+        if (/\G\}/mgc) {
+            return 1;
+        }
 
-    # parse key
-    my $key; {
-        local $POINTER = \$key;
-        if (!$self->_parse_string() && !$self->_parse_identifier()) {
+        # parse key
+        my $key; {
+            local $POINTER = \$key;
+            if (!$self->_parse_string() && !$self->_parse_identifier()) {
+                return;
+            }
+        }
+
+        # skip
+        1 while $self->_skip_whitespace() || $self->_skip_comments();
+
+        # parse object key sep
+        unless (/\G\:/mgc) {
             return;
         }
-    }
 
-    # skip
-    1 while $self->_skip_whitespace() || $self->_skip_comments();
+        # parse value
+        my $value; {
+            local $POINTER = \$value;
+            if (!$self->_parse_value()) {
+                return;
+            }
+        }
 
-    # parse object key sep
-    unless (/\G\:/mgc) {
+        # set value
+        my $hash = $POINTER;
+        $hash->{$key} = $value;
+
+        # skip
+        1 while $self->_skip_whitespace() || $self->_skip_comments();
+
+        # is last?
+        if (/\G\}/mgc) {
+            return 1;
+        }
+        elsif (/\G,/mgc) {
+            next;
+        }
+
         return;
     }
-
-    # parse value
-    my $value; {
-        local $POINTER = \$value;
-        if (!$self->_parse_value()) {
-            return;
-        }
-    }
-
-    # set value
-    my $hash = $POINTER;
-    $hash->{$key} = $value;
-
-    # skip
-    1 while $self->_skip_whitespace() || $self->_skip_comments();
-
-    # is last?
-    if (/\G\}/mgc) {
-        return 1;
-    }
-    elsif (/\G,/mgc) {
-        return $self->_parse_object_kv;
-    }
-
-    return;
 }
 
 sub _parse_array_value {
     my $self = shift;
 
-    # skip
-    1 while $self->_skip_whitespace() || $self->_skip_comments();
+    while (1) {
+        # skip
+        1 while $self->_skip_whitespace() || $self->_skip_comments();
 
-    # is last?
-    if (/\G\]/mgc) {
-        return 1;
-    }
-
-    # parse value
-    my $value; {
-        local $POINTER = \$value;
-        if (!$self->_parse_value()) {
-            return;
+        # is last?
+        if (/\G\]/mgc) {
+            return 1;
         }
+
+        # parse value
+        my $value; {
+            local $POINTER = \$value;
+            if (!$self->_parse_value()) {
+                return;
+            }
+        }
+
+        # set value
+        my $array = $POINTER;
+        push @$array => $value;
+
+        # skip
+        1 while $self->_skip_whitespace() || $self->_skip_comments();
+
+        # is last?
+        if (/\G\]/mgc) {
+            return 1;
+        }
+        elsif (/\G,/mgc) {
+            next;
+        }
+
+        return;
     }
-
-    # set value
-    my $array = $POINTER;
-    push @$array => $value;
-
-    # skip
-    1 while $self->_skip_whitespace() || $self->_skip_comments();
-
-    # is last?
-    if (/\G\]/mgc) {
-        return 1;
-    }
-    elsif (/\G,/mgc) {
-        return $self->_parse_array_value;
-    }
-
-    return;
 }
 
 sub _parse_number {
